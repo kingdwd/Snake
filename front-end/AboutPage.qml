@@ -7,25 +7,77 @@ Item {
     ColumnLayout {
         id: columnLayout
         anchors.fill: parent
+        spacing: 10
 
-        Image {
-            id: aboutLogo
-
-            Layout.preferredHeight: parent.width / 2
-            Layout.preferredWidth: width
+        Rectangle {
+            Layout.preferredHeight: parent.width / 4
+            Layout.preferredWidth: parent.width / 4
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-            source: "qrc:/qtquickplugin/images/template_image.png"
+            color: "#00000000"
+            Image {
+                id: aboutLogo
+                fillMode: Image.PreserveAspectFit
+
+                source: "qrc:/logo/logo"
+                anchors.margins: 10
+                anchors.fill: parent
+
+            }
         }
 
-        Label {
-            id: aboutText
-            text: qsTr("Label")
-            font.family: "Verdana"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
+        Flickable {
+            id: flickable
+            flickableDirection: Flickable.VerticalFlick
+
+            Layout.preferredHeight: parent.width - parent.width / 4
+
+
+            TextArea.flickable: TextArea {
+                id: textArea
+                textFormat: Qt.RichText
+                wrapMode: TextArea.Wrap
+                readOnly: true
+                persistentSelection: true
+
+                leftPadding: 6
+                rightPadding: 6
+                topPadding: 0
+                bottomPadding: 0
+                background: null
+
+                text: qsTr("Управление игрой происходит посредством нажатия на тачпада Вашего устройства, чем чаще нажимаете, тем быстрее двигается змейка. Каждое последующее нажатие, изменяет направление змейки, в противоположную сторону.
+
+Цель игры набрать максимальное количество очков. Количество очков зависит от пройденного расстояния.
+
+Автор: Янкович Роман. Группа 10903516");
+                font.family: "Verdana"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+            ScrollBar.vertical: ScrollBar {}
             Layout.fillWidth: true
+
         }
+
+//        TextEdit {
+
+
+
+////            Label {
+////                id: aboutText
+
+////                wrapMode: Text.WordWrap
+
+////            }
+//            wrapMode: Text.WordWrap
+
+
+
+//        }
+
 
     }
 

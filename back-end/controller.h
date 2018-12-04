@@ -7,6 +7,7 @@
 #include "diff.h"
 #include "snake.h"
 #include "world.h"
+#include "localrecords.h"
 
 class Controller : public QObject
 {
@@ -21,6 +22,8 @@ private:
     bool pause = false;
     int lvl = 0;
     QMap<int, GuiObject *> objectsContainer;
+
+    LocalRecords records;
 
     void generateDiff(const QMap<int, GuiObject *> &);
 
@@ -39,6 +42,7 @@ public slots:
     void buttonPress();
 
     void setPause(bool);
+    QObject* getRecords();
 
     void update();
 

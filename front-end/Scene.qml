@@ -141,7 +141,8 @@ Item {
             } else if (autoTimer.running) {
                 model.newGame();
             } else {
-                showMenu = true;
+
+                gameEnd._show();
             }
         }
     }
@@ -266,6 +267,25 @@ Item {
         z: returnToMenu.z
 
         visible: !showMenu
+
+    }
+
+    PagePopUp {
+        id: gameEnd
+
+        width: parent.width / 3
+        height: parent.height / 3;
+        x: parent.width / 2 - width / 2
+        y: parent.height / 2 - height / 2
+
+        source: "TextInput.qml"
+
+
+        onClosed: {
+            opacity = 0;
+
+            showMenu = true;
+        }
 
     }
 }

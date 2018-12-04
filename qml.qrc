@@ -10,6 +10,10 @@
         <file>front-end/SnakeItem.qml</file>
         <file>front-end/About.qml</file>
         <file>front-end/AboutPage.qml</file>
+        <file>front-end/BasePopUp.qml</file>
+        <file>front-end/PagePopUp.qml</file>
+        <file>front-end/RecordsPage.qml</file>
+        <file>front-end/TextInput.qml</file>
     </qresource>
     <qresource prefix="/texture">
         <file alias="up">img/up.svg</file>

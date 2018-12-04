@@ -110,3 +110,7 @@ void Controller::setPause(bool p){
     }
 }
 
+QObject *Controller::getRecords() {
+    return &records;
+}
+
