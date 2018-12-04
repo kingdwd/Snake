@@ -8,6 +8,8 @@
         <file>front-end/Image.qml</file>
         <file>front-end/NotificationForm.qml</file>
         <file>front-end/SnakeItem.qml</file>
+        <file>front-end/About.qml</file>
+        <file>front-end/AboutPage.qml</file>
     </qresource>
     <qresource prefix="/texture">
         <file alias="up">img/up.svg</file>
