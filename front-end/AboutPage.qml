@@ -4,6 +4,7 @@ import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.3
 
 Item {
+    clip: true
     ColumnLayout {
         id: columnLayout
         anchors.fill: parent
@@ -29,9 +30,10 @@ Item {
 
         Flickable {
             id: flickable
+            clip: true
             flickableDirection: Flickable.VerticalFlick
 
-            Layout.preferredHeight: parent.width - parent.width / 4
+            Layout.preferredHeight: parent.height - parent.height / 2.8
 
 
             TextArea.flickable: TextArea {
@@ -48,8 +50,9 @@ Item {
                 background: null
 
                 text: qsTr("Управление игрой происходит посредством нажатия на тачпад вашего устройства, чем чаще нажимаете, тем быстрее двигается змейка. Каждое последующее нажатие, изменяет направление змейки, в противоположную сторону.
-Цель игры набрать максимальное количество очков. Количество очков зависит от пройденного расстояния.
+Цель игры набрать максимальное количество очков. Количество очков зависит от пройденного расстояния. \n
 Автор: Янкович Роман. Группа 10903516");
+                anchors.fill: parent
                 font.family: "Verdana"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignTop
@@ -57,28 +60,16 @@ Item {
                 onLinkActivated: Qt.openUrlExternally(link)
             }
 
-            ScrollBar.vertical: ScrollBar {}
+            ScrollBar.vertical: ScrollBar { }
             Layout.fillWidth: true
 
         }
 
-//        TextEdit {
-
-
-
-////            Label {
-////                id: aboutText
-
-////                wrapMode: Text.WordWrap
-
-////            }
-//            wrapMode: Text.WordWrap
-
-
-
-//        }
-
-
     }
 
 }
+
+/*##^## Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+ ##^##*/

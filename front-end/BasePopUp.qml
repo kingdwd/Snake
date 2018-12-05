@@ -56,7 +56,8 @@ Popup {
     }
 
     onClosed: {
-        opacity = 0;
+        if (autoClose)
+            opacity = 0;
     }
 
     closePolicy: (autoClose)? Popup.NoAutoClose: Popup.CloseOnReleaseOutside

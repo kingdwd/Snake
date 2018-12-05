@@ -12,6 +12,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+TARGET=snake
+
 SOURCES += \
     back-end/main.cpp \
     back-end/baseclass.cpp \
@@ -70,6 +72,9 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
     languages/ru.ts
+
+TRANSLATIONS +=     languages/ru.ts
+
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

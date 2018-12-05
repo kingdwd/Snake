@@ -22,4 +22,8 @@
         <file alias="logo">img/logo.png</file>
         <file>img/icon.ico</file>
     </qresource>
+    <qresource prefix="/languages">
+        <file alias="ru">languages/ru.qm</file>
+        <file>music.mp3</file>
+    </qresource>
 </RCC>
