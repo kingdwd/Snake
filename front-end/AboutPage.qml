@@ -25,6 +25,8 @@ Item {
             }
         }
 
+
+
         Flickable {
             id: flickable
             flickableDirection: Flickable.VerticalFlick
@@ -45,14 +47,12 @@ Item {
                 bottomPadding: 0
                 background: null
 
-                text: qsTr("Управление игрой происходит посредством нажатия на тачпада Вашего устройства, чем чаще нажимаете, тем быстрее двигается змейка. Каждое последующее нажатие, изменяет направление змейки, в противоположную сторону.
-
+                text: qsTr("Управление игрой происходит посредством нажатия на тачпад вашего устройства, чем чаще нажимаете, тем быстрее двигается змейка. Каждое последующее нажатие, изменяет направление змейки, в противоположную сторону.
 Цель игры набрать максимальное количество очков. Количество очков зависит от пройденного расстояния.
-
 Автор: Янкович Роман. Группа 10903516");
                 font.family: "Verdana"
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                verticalAlignment: Text.AlignTop
 
                 onLinkActivated: Qt.openUrlExternally(link)
             }

@@ -20,6 +20,6 @@
     </qresource>
     <qresource prefix="/logo">
         <file alias="logo">img/logo.png</file>
-        <file alias="icon">img/icon.ico</file>
+        <file>img/icon.ico</file>
     </qresource>
 </RCC>
