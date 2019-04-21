@@ -54,7 +54,7 @@ SOURCES += \
 
 HEADERS += \
         clientprotocol.h \
-        clientprotocol_global.h \ 
+        clientprotocol_global.h \
     client.h \
     server.h \
     cp.h \

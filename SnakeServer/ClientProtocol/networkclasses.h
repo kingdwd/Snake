@@ -2,6 +2,8 @@
 #define NETWORKCLASSES_H
 #include "clientprotocol_global.h"
 
+#include <QVariant>
+
 namespace ClientProtocol {
 
 #define BEGIN_CUSTOM_TYPE
@@ -79,6 +81,9 @@ public:
 
     static unsigned int getSizeType(Type);
     NetworkClasses();
+    static void byteCast(NetworkClasses::Type type,
+                  const QVariant &item,
+                  QByteArray &res);
 };
 }
 #endif // NETWORKCLASSES_H

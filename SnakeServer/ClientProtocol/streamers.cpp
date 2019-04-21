@@ -76,6 +76,7 @@ bool Streamers::read(QDataStream &stream, QVariantMap &map, const NetworkClasses
                 map.insert(property, list);
 
             } else {
+
                 QByteArray array;
                 stream >> array;
 
@@ -98,6 +99,22 @@ bool Streamers::read(const QByteArray &data, QVariantMap &map) {
     return read(stream, map);
 }
 
+bool Streamers::readNumber(NetworkClasses::Type type, QVariant &value, QDataStream &stream) {
+
+    int size = static_cast<int> (NetworkClasses::getSizeType(type));
+
+    if (!size)
+        return false;
+
+    char *data = new char[static_cast<unsigned int>(size)];
+    if (size != stream.readRawData(data, size)) {
+        return false;
+    }
+
+    value = QVariant::fromValue(QByteArray(data, size));
+    return value.isValid();
+}
+
 bool Streamers::write(QDataStream &stream, const QVariantMap &map) {
 
     auto type = baseWrite(stream, map);
@@ -114,10 +131,12 @@ bool Streamers::write(QDataStream &stream, const QVariantMap &map) {
 
         if (NetworkClasses::isNumber(typeItem)) {
 
-            auto val = value.toByteArray();
-            auto size = static_cast<int>(NetworkClasses::getSizeType(typeItem));
+            QByteArray val;
+            NetworkClasses::byteCast(typeItem, value, val);
 
-            if (size != stream.writeRawData(val.data(), size)) {
+            auto size = val.size();
+
+            if (size != stream.writeRawData(static_cast<char*>(val.data()), size)) {
                 return false;
             }
         }
@@ -134,14 +153,9 @@ bool Streamers::write(QDataStream &stream, const QVariantMap &map) {
                 QByteArray array;
                 auto varList = value.toList();
                 for (auto &&i : varList) {
-                    auto temp = i.toByteArray();
-                    int typeSize = static_cast<int>(NetworkClasses::getSizeType(arrayType));
-                    if (temp.size() > typeSize) {
-
-                        return false;
-                    }
-                    temp.resize(typeSize);
-                    array.push_back(temp);
+                    QByteArray val;
+                    NetworkClasses::byteCast(arrayType, i, val);
+                    array.append(val);
                 }
                 stream << array;
             }
@@ -155,5 +169,18 @@ bool Streamers::write(QByteArray &data, const QVariantMap &map) {
     QDataStream stream(&data, QIODevice::WriteOnly);
 
     return write(stream, map);
+}
+
+bool Streamers::writeNumber(NetworkClasses::Type type, const QVariant & value, QDataStream& stream) {
+    QByteArray val;
+    NetworkClasses::byteCast(type, value, val);
+
+    auto size = val.size();
+
+    if (size != stream.writeRawData(static_cast<char*>(val.data()), size)) {
+        return false;
+    }
+
+    return true;
 }
 }

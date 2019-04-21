@@ -1,4 +1,6 @@
 #include "networkclasses.h"
+
+#include <QVariant>
 namespace ClientProtocol {
 
 NetworkClasses::NetworkClasses()
@@ -57,6 +59,17 @@ unsigned int NetworkClasses::getSizeType(NetworkClasses::Type type) {
     case SHA256: return 32;
     default: return 0;
     }
+}
+
+void NetworkClasses::byteCast(NetworkClasses::Type type,
+                              const QVariant& item,
+                              QByteArray& res) {
+    res.clear();
+
+    const void* data = item.data();
+    res.append(reinterpret_cast<char*>(&data),
+               static_cast<int>(getSizeType(type)));
+
 }
 
 }

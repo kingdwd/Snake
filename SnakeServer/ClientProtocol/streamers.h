@@ -22,9 +22,17 @@ public:
     static bool read(QDataStream &stream, QVariantMap &map,
                      const NetworkClasses::Type checkType = NetworkClasses::CustomType);
     static bool read(const QByteArray &data, QVariantMap &map);
+
+    static bool readNumber(NetworkClasses::Type type,
+                            QVariant &value,
+                            QDataStream &stream);
+
     static bool write(QDataStream &stream, const QVariantMap &map);
     static bool write(QByteArray &data, const QVariantMap &map);
 
+    static bool writeNumber(NetworkClasses::Type type,
+                            const QVariant &value,
+                            QDataStream &stream);
 
     static bool isGeneralObject(NetworkClasses::Type);
     Streamers() = delete;
