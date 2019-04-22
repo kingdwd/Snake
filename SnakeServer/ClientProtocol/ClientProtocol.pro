@@ -42,6 +42,7 @@ include($$PWD/../../SnakeUtils/SnakeUtils.pri)
 
 
 SOURCES += \
+    basenetworkobject.cpp \
         clientprotocol.cpp \
     client.cpp \
     server.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
 
 
 HEADERS += \
+        basenetworkobject.h \
         clientprotocol.h \
         clientprotocol_global.h \ 
     client.h \
