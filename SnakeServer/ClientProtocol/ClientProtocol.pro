@@ -42,29 +42,29 @@ include($$PWD/../../SnakeUtils/SnakeUtils.pri)
 
 
 SOURCES += \
-    basenetworkobject.cpp \
+        basenetworkobject.cpp \
         clientprotocol.cpp \
-    client.cpp \
-    server.cpp \
-    streamers.cpp \
-    networkobjects.cpp \
-    networkclasses.cpp \
-    factorynetobjects.cpp \
-    connectioninfo.cpp
+        client.cpp \
+        networkclasssize.cpp \
+        networkobjects.cpp \
+        ping.cpp \
+        server.cpp \
+        factorynetobjects.cpp \
+        connectioninfo.cpp
 
 
 HEADERS += \
         basenetworkobject.h \
         clientprotocol.h \
-        clientprotocol_global.h \ 
-    client.h \
-    server.h \
-    cp.h \
-    config.h \
-    streamers.h \
-    networkobjects.h \
-    networkclasses.h \
-    factorynetobjects.h \
-    connectioninfo.h \
-    cpserver.h
+        clientprotocol_global.h \
+        networkclasssize.h \
+        client.h \
+        networkobjects.h \
+        ping.h \
+        server.h \
+        cp.h \
+        config.h \
+        factorynetobjects.h \
+        connectioninfo.h \
+        cpserver.h
 

@@ -6,9 +6,10 @@
 #include <QVariantMap>
 #include <snakeutils.h>
 #include "config.h"
-#include "networkclasses.h"
 
 namespace ClientProtocol {
+
+class BaseNetworkObject;
 
 enum Type: unsigned char {
     Undefined = 0x00,
@@ -17,20 +18,7 @@ enum Type: unsigned char {
     Stream = 0x03,
 };
 
-//enum class Command: unsigned char {
-//    Undefined = 0x00,
-//    Ping = 0x01,
-//    Item = 0x02,
-//    Login = 0x03,
-//    PlayerData = 0x04,
-//    SaveData = 0x05
-
-//};
-
-unsigned int getSize(NetworkClasses::Type type, bool isMax = false);
-bool isStaticObject(NetworkClasses::Type type, unsigned int &max, unsigned int &min);
-bool isValidSize(NetworkClasses::Type type, unsigned int size);
-bool isValidMap(const QVariantMap &map);
+bool isValidSize(qint8 type, unsigned int size);
 
 /**
  * @brief The Header struct 8 byte
@@ -40,15 +28,15 @@ struct CLIENTPROTOCOLSHARED_EXPORT Header {
     /**
      * @brief size - size of package data (not header)
      */
-    unsigned int size: 32;
+    unsigned int size: 16;
     /**
      * @brief type of package see Type
      */
-    unsigned char type: 8;
+    unsigned char type: 2;
     /**
      * @brief command of pacage see Command
      */
-    unsigned short command: 16;
+    unsigned short command: 6;
 
     /**
      * @brief sig
@@ -101,14 +89,14 @@ struct CLIENTPROTOCOLSHARED_EXPORT Package {
      * @brief parse
      * @return Qmap of package (default key if "value")
      */
-    bool parse(QVariantMap &res) const;
+    bool parse(BaseNetworkObject *res) const;
 
     /**
      * @brief create - fill package
      * @param data - data of filled
      * @return true if all done
      */
-    bool create(const QVariantMap &data, Type type);
+    bool create(const BaseNetworkObject *data, Type type);
 
     /**
      * @brief toBytes

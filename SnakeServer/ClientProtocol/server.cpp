@@ -2,6 +2,7 @@
 #include "quasarapp.h"
 #include <QTcpSocket>
 #include <factorynetobjects.h>
+#include <networkobjects.h>
 
 namespace ClientProtocol {
 
@@ -19,7 +20,7 @@ bool Server::parsePackage(const Package &pkg, QTcpSocket* sender) {
     }
 
     switch (pkg.hdr.command) {
-    case NetworkClasses::Ping: {
+    case PingType: {
 
         if (pkg.hdr.type != Request) {
             return false;

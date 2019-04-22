@@ -1,30 +1,37 @@
 #ifndef FACTORYNETOBJECTS_H
 #define FACTORYNETOBJECTS_H
 #include "clientprotocol_global.h"
-#include "networkobjects.h"
-
+#include "basenetworkobject.h"
+#include <QMap>
+#include <typeinfo>
 namespace ClientProtocol {
 
 class CLIENTPROTOCOLSHARED_EXPORT FactoryNetObjects {
+private:
+    static QMap<qint8, BaseNetworkObject*> map;
+    static QMap<quint64, qint8> types_hashes;
+    static QMap<qint8, NetworkClassSize> types_sizes;
+
 public:
     FactoryNetObjects() = delete;
 
-    static bool build(NetworkClasses::Type type, QVariantMap&);
+    static BaseNetworkObject *build(qint8 type);
+    static NetworkClassSize getSize(qint8 type);
+    static bool isRegisteredType(qint8 type);
 
-    static bool fillRandomData(QVariantMap &item);
-    static bool isValid(const QVariantMap &item, NetworkClasses::Type type);
-
-    template <typename T>
-    static QVariantList buildArray(const T& array) {
-
-        QVariantList res;
-        for (auto &&i : array) {
-            res.push_back(i);
+    template<typename T>
+    static qint8 regType() {
+        auto temp = typeid (T).hash_code();
+        if (types_hashes.contains(temp)) {
+            return types_hashes.value(temp);
         }
 
-        return res;
+        auto tempObj = new T();
+        map.insert(static_cast<char>(types_hashes.size()), tempObj);
+        types_sizes.insert(static_cast<char>(types_hashes.size()), tempObj->classSize());
+        types_hashes.insert(temp, static_cast<char>(types_hashes.size()));
+        return types_hashes.value(temp);
     }
-
 };
 }
 

@@ -2,8 +2,7 @@
 
 #include <QDataStream>
 #include <QVariantMap>
-#include <networkobjects.h>
-#include <streamers.h>
+#include <factorynetobjects.h>
 
 #define DEFAULT_GAME_PORT 7777
 
@@ -16,15 +15,11 @@ Header::Header() {
 
 bool Header::isValid() const {
 
-    if (sizeof (*this) != 8) {
+    if (sizeof (*this) != 4) {
         return false;
     }
 
-    if (!NetworkClasses::isCustomType(static_cast<NetworkClasses::Type>(command))) {
-        return false;
-    }
-
-    return isValidSize(static_cast<NetworkClasses::Type>(command) , size);
+    return isValidSize(static_cast<qint8>(command) , size);
 }
 
 void Header::reset() {
@@ -42,43 +37,40 @@ bool Package::isValid() const {
         return false;
     }
 
+    if (data.size() && hdr.command != data.at(0)) {
+        return false;
+    }
+
     return hdr.size == static_cast<unsigned int> (data.size());
 }
 
-bool Package::parse(QVariantMap& res) const {
+bool Package::parse(BaseNetworkObject* res) const {
     if (!isValid())
         return false;
 
-    res["command"] = hdr.command;
-    res["type"] = hdr.type;
-    res["sig"] = hdr.sig;
+    auto obj = FactoryNetObjects::build(hdr.command);
 
     QDataStream stream(data);
-
-    if (!Streamers::read(stream, res, static_cast<NetworkClasses::Type>(hdr.command))) {
-        return false;
-    }
+    obj->readFromStream(stream);
+    *res = *obj;
 
     return true;
 }
 
 
-bool Package::create(const QVariantMap &map, Type type) {
+bool Package::create(const BaseNetworkObject *obj, Type type) {
 
-    auto command = static_cast<NetworkClasses::Type>(
-                map.value("command", NetworkClasses::Undefined).toInt());
+    auto command = obj->getClass();
 
-    if (!(command & NetworkClasses::CustomType) || type == Type::Undefined) {
+    if (command < 0) {
         return false;
     }
 
     QDataStream stream(&data, QIODevice::ReadWrite);
 
-    if (!Streamers::write(stream, map)) {
-        return false;
-    }
+    obj->writeToStream(stream);
 
-    hdr.command = command;
+    hdr.command = static_cast<quint8>(command);
     hdr.type = type;
     hdr.size = static_cast<unsigned int>(data.size());
 
@@ -99,88 +91,13 @@ void Package::reset() {
     data.clear();
 }
 
-unsigned int getSize(NetworkClasses::Type type, bool isMax) {
-    auto size = NetworkClasses::getSizeType(type);
-    if (size) {
-        return size;
-    }
+bool isValidSize(qint8 type, unsigned int size) {
 
-    if (type == NetworkClasses::String) {
-        return (isMax)? 255: 5;
-    } else if (type == NetworkClasses::Variant) {
-        return (isMax)? 16 : 6;
-    }
-
-    if (NetworkClasses::isArray(type)) {
-        NetworkClasses::Type arrayType = static_cast<NetworkClasses::Type>(type & ~NetworkClasses::Array);
-
-        auto sizeItem = NetworkClasses::getSizeType(arrayType);
-
-        if (arrayType == NetworkClasses::String) {
-            sizeItem = (isMax)? 255: 5;
-        } else if (arrayType == NetworkClasses::Variant) {
-            sizeItem = (isMax)? 16 : 6;
-        }
-
-        constexpr int description = sizeof(int);
-
-        size += description + sizeItem * ((isMax)? MAX_SIZE: MIN_SIZE);
-        return size;
-    }
-
-    if (type & NetworkClasses::CustomType) {
-        size += sizeof (int) + sizeof (short);
-    }
-
-    auto listPropertyes = networkObjects.value(type);
-    for (auto &&i : listPropertyes) {
-        size += getSize(i, isMax);
-    }
-
-    return size;
-}
-
-bool isStaticObject(NetworkClasses::Type type, unsigned int &max, unsigned int &min) {
-    max = getSize(type, true);
-    min = getSize(type);
-
-    return max == min;
-}
-
-bool isValidSize(NetworkClasses::Type type, unsigned int size) {
-
-    if (type == NetworkClasses::Undefined) {
+    if (!FactoryNetObjects::isRegisteredType(type)) {
         return false;
     }
 
-    unsigned int max;
-    unsigned int min;
-    if (isStaticObject(type, max, min)) {
-        return size == max;
-    }
-
-    return size <= max && size >= min;
-
-}
-
-bool isValidMap(const QVariantMap &map) {
-    auto command = static_cast<NetworkClasses::Type>(
-                map.value("command", NetworkClasses::Undefined).toInt());
-
-
-    if (!ClientProtocol::NetworkClasses::isCustomType(command)) {
-        return false;
-    }
-
-    auto keys = ClientProtocol::networkObjects.value(command).keys();
-
-    for (auto &key :keys)
-    {
-        if (!map.contains(key)) {
-            return false;
-        }
-    }
-    return true;
+    return FactoryNetObjects::getSize(type).isValid(size);
 }
 
 }

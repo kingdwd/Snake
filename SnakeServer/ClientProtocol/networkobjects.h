@@ -1,11 +1,15 @@
 #ifndef NETWORKOBJECTS_H
 #define NETWORKOBJECTS_H
-#include <QHash>
-#include "snakeutils.h"
-#include "networkclasses.h"
+
+#include <QMap>
+#include <QSet>
+#include "ping.h"
+#include "factorynetobjects.h"
 
 namespace ClientProtocol {
+extern const qint8 PingType;
 
-extern const QHash<NetworkClasses::Type, QMap<QString, NetworkClasses::Type>> networkObjects;
 }
+
+#define PING PingType
 #endif // NETWORKOBJECTS_H
