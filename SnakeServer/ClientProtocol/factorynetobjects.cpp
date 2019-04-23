@@ -12,7 +12,7 @@ BaseNetworkObject *FactoryNetObjects::build(quint8 type) {
 }
 
 NetworkClassSize FactoryNetObjects::getSize(quint8 type) {
-    return types_sizes.value(type);
+    return types_sizes.value(type, 0);
 }
 
 bool FactoryNetObjects::isRegisteredType(quint8 type) {
