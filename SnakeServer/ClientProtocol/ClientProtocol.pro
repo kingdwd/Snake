@@ -46,8 +46,6 @@ SOURCES += \
         clientprotocol.cpp \
         client.cpp \
         networkclasssize.cpp \
-        networkobjects.cpp \
-        ping.cpp \
         server.cpp \
         factorynetobjects.cpp \
         connectioninfo.cpp
@@ -59,8 +57,6 @@ HEADERS += \
         clientprotocol_global.h \
         networkclasssize.h \
         client.h \
-        networkobjects.h \
-        ping.h \
         server.h \
         cp.h \
         config.h \

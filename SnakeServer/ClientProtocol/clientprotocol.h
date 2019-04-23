@@ -18,7 +18,15 @@ enum Type: unsigned char {
     Stream = 0x03,
 };
 
+enum class Command: quint8 {
+    Undefined = 0x00,
+    Ping = 0x01,
+    BadRequest = 0x02
+};
+
 bool isValidSize(qint8 type, unsigned int size);
+
+bool initClientProtockol();
 
 /**
  * @brief The Header struct 8 byte
@@ -89,7 +97,7 @@ struct CLIENTPROTOCOLSHARED_EXPORT Package {
      * @brief parse
      * @return Qmap of package (default key if "value")
      */
-    bool parse(BaseNetworkObject *res) const;
+    bool parse(BaseNetworkObject **res) const;
 
     /**
      * @brief create - fill package
@@ -97,6 +105,14 @@ struct CLIENTPROTOCOLSHARED_EXPORT Package {
      * @return true if all done
      */
     bool create(const BaseNetworkObject *data, Type type);
+
+    /**
+     * @brief create
+     * @param cmd command of package
+     * @param type type
+     * @return
+     */
+    bool create(Command cmd, Type type);
 
     /**
      * @brief toBytes

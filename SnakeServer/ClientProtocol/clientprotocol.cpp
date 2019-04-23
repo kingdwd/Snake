@@ -1,4 +1,5 @@
 #include "clientprotocol.h"
+#include "ping.h"
 
 #include <QDataStream>
 #include <QVariantMap>
@@ -44,7 +45,7 @@ bool Package::isValid() const {
     return hdr.size == static_cast<unsigned int> (data.size());
 }
 
-bool Package::parse(BaseNetworkObject* res) const {
+bool Package::parse(BaseNetworkObject** res) const {
     if (!isValid())
         return false;
 
@@ -52,13 +53,17 @@ bool Package::parse(BaseNetworkObject* res) const {
 
     QDataStream stream(data);
     obj->readFromStream(stream);
-    *res = *obj;
+    *res = obj;
 
     return true;
 }
 
 
 bool Package::create(const BaseNetworkObject *obj, Type type) {
+
+    if (!obj) {
+        return false;
+    }
 
     auto command = obj->getClass();
 
@@ -67,10 +72,23 @@ bool Package::create(const BaseNetworkObject *obj, Type type) {
     }
 
     QDataStream stream(&data, QIODevice::ReadWrite);
-
     obj->writeToStream(stream);
 
     hdr.command = static_cast<quint8>(command);
+    hdr.type = type;
+    hdr.size = static_cast<unsigned int>(data.size());
+
+    return isValid();
+}
+
+bool Package::create(Command cmd, Type type) {
+
+
+    if (cmd == Command::Undefined) {
+        return false;
+    }
+
+    hdr.command = static_cast<quint8>(cmd);
     hdr.type = type;
     hdr.size = static_cast<unsigned int>(data.size());
 
@@ -98,6 +116,10 @@ bool isValidSize(qint8 type, unsigned int size) {
     }
 
     return FactoryNetObjects::getSize(type).isValid(size);
+}
+
+bool initClientProtockol() {
+    return true;
 }
 
 }
