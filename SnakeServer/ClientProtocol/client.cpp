@@ -12,35 +12,40 @@
 
 namespace ClientProtocol {
 
-bool Client::receiveData(BaseNetworkObject *map) {
+bool Client::receiveData(BaseNetworkObject *map, Header hdr) {
 
-    auto command = static_cast<NetworkClasses::Type>(map.value("command", Undefined).toInt());
-    auto type = static_cast<Type>(map.value("type", 2).toInt());
-    int  index = map.value("sig", -1).toInt();
+    auto command = static_cast<Command>(map->getClass());
+    auto type = static_cast<Type>(hdr.type);
+    int  index = hdr.sig;
 
     if (index < 0 || index > 255)
         return false;
 
 #define idx static_cast<quint8>(index)
 
-    auto expectedCommand = static_cast<NetworkClasses::Type>(_requestsMap[idx].value("expected", NetworkClasses::Undefined).toInt());
+    auto expectedCommand = static_cast<Command>(
+                _requestsMap[idx].value("expected",
+                                        static_cast<quint8>(Command::Undefined)).toInt());
 
-    if (!expectedCommand || (command != expectedCommand) || type != Responke) {
+    if (expectedCommand != Command::Undefined ||
+            (command != expectedCommand) ||
+            type != Responke) {
+
         QuasarAppUtils::Params::verboseLog("wrong sig of package");
         return false;
     }
 
-    map["time"] = QDateTime::currentMSecsSinceEpoch();
-    _requestsMap[idx] = map;
+    _requestsMap[idx]["time"] = QDateTime::currentMSecsSinceEpoch();
 
-    if (expectedCommand != NetworkClasses::Undefined &&
+    if (expectedCommand != Command::Undefined &&
             (command == expectedCommand) && type == Responke) {
 
-        setOnline(static_cast<quint32>(map.value("token", "").toByteArray().size()) ==
-                  NetworkClasses::getSizeType(NetworkClasses::SHA256));
+        setOnline(expectedCommand == Command::Login ||
+                  expectedCommand == Command::GetItem ||
+                  expectedCommand == Command::GameData);
     }
 
-    emit sigIncommingData(map);
+    emit sigIncommingData(*map);
 
     return true;
 }
@@ -67,10 +72,11 @@ void Client::incommingData() {
 
     if (_downloadPackage.isValid()) {
         BaseNetworkObject *res;
-        if (_downloadPackage.parse(&res) && !receiveData(res)) {
+        if (_downloadPackage.parse(&res) && !receiveData(res, _downloadPackage.hdr)) {
             Q_UNUSED(res);
             // ban
         }
+        delete res;
 
         _downloadPackage.reset();
         return;
