@@ -21,10 +21,14 @@ enum Type: unsigned char {
 enum class Command: quint8 {
     Undefined = 0x00,
     Ping = 0x01,
-    BadRequest = 0x02
+    BadRequest = 0x02,
+    Login = 0x03,
+    UpdatePlayerData = 0x04,
+    GameData = 0x05,
+    GetItem = 0x06
 };
 
-bool isValidSize(qint8 type, unsigned int size);
+bool isValidSize(quint8 type, unsigned int size);
 
 bool initClientProtockol();
 

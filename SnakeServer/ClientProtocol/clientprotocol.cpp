@@ -1,5 +1,8 @@
 #include "clientprotocol.h"
-#include "ping.h"
+#include "gamedata.h"
+#include "getitem.h"
+#include "login.h"
+#include "updateplayerdata.h"
 
 #include <QDataStream>
 #include <QVariantMap>
@@ -20,7 +23,7 @@ bool Header::isValid() const {
         return false;
     }
 
-    return isValidSize(static_cast<qint8>(command) , size);
+    return isValidSize(command, size);
 }
 
 void Header::reset() {
@@ -109,7 +112,7 @@ void Package::reset() {
     data.clear();
 }
 
-bool isValidSize(qint8 type, unsigned int size) {
+bool isValidSize(quint8 type, unsigned int size) {
 
     if (!FactoryNetObjects::isRegisteredType(type)) {
         return false;
@@ -119,6 +122,25 @@ bool isValidSize(qint8 type, unsigned int size) {
 }
 
 bool initClientProtockol() {
+    if (!FactoryNetObjects::regType<Login>(
+                static_cast<quint8>(Command::Login))) {
+        return false;
+    }
+
+    if (!FactoryNetObjects::regType<UpdatePlayerData>(
+                static_cast<quint8>(Command::UpdatePlayerData))) {
+        return false;
+    }
+
+    if (!FactoryNetObjects::regType<GameData>(
+                static_cast<quint8>(Command::GameData))) {
+        return false;
+    }
+
+    if (!FactoryNetObjects::regType<GetItem>(
+                static_cast<quint8>(Command::GetItem))) {
+        return false;
+    }
     return true;
 }
 

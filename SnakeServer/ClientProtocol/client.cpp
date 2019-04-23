@@ -5,10 +5,14 @@
 #include <QDateTime>
 #include <quasarapp.h>
 #include "factorynetobjects.h"
+#include "gamedata.h"
+#include "getitem.h"
+#include "login.h"
+#include "updateplayerdata.h"
 
 namespace ClientProtocol {
 
-bool Client::receiveData(QVariantMap map) {
+bool Client::receiveData(BaseNetworkObject *map) {
 
     auto command = static_cast<NetworkClasses::Type>(map.value("command", Undefined).toInt());
     auto type = static_cast<Type>(map.value("type", 2).toInt());
@@ -62,8 +66,8 @@ void Client::incommingData() {
     }
 
     if (_downloadPackage.isValid()) {
-        QVariantMap res;
-        if (_downloadPackage.parse(res) && !receiveData(res)) {
+        BaseNetworkObject *res;
+        if (_downloadPackage.parse(&res) && !receiveData(res)) {
             Q_UNUSED(res);
             // ban
         }
@@ -117,8 +121,7 @@ bool Client::ping() {
 
     Package pcg;
 
-    QVariantMap map;
-    if (!(FactoryNetObjects::build(NetworkClasses::Ping, map) && pcg.create(map, Request))) {
+    if (!pcg.create(Command::Ping, Request)) {
         return false;
     };
 
@@ -141,15 +144,11 @@ bool Client::login(const QString &gmail, const QByteArray &pass) {
 
     Package pcg;
 
-    QVariantMap map;
-    if (!FactoryNetObjects::build(NetworkClasses::Login, map)) {
-        return false;
-    };
+    Login login;
+    login.setHashPass(pass);
+    login.setGmail(gmail);
 
-    map["gmail"] = gmail;
-    map["hashPass"] = pass;
-
-    if (!pcg.create(map, Request)) {
+    if (!pcg.create(&login, Request)) {
         return false;
     };
 
@@ -169,20 +168,15 @@ bool Client::updateData() {
 
     Package pcg;
 
-    QVariantMap map;
-    if (!FactoryNetObjects::build(NetworkClasses::UpdatePlayerData, map)) {
-        return false;
-    }
+    UpdatePlayerData rec;
+    rec.setToken(_token);
 
-    map["token"] = _token;
-
-    if (!pcg.create(map, Request)) {
+    if (!pcg.create(&rec, Request)) {
         return false;
     };
 
     if (!sendPackage(pcg)) {
         return false;
-
     }
 
     return true;
@@ -195,15 +189,11 @@ bool Client::savaData(const QList<int>& gameData) {
 
     Package pcg;
 
-    QVariantMap map;
-    if (!FactoryNetObjects::build(NetworkClasses::Game, map)) {
-        return false;
-    }
+    GameData rec;
+    rec.setToken(_token);
+    rec.setTimeClick(gameData);
 
-    map["token"] = _token;
-    map["time"] = FactoryNetObjects::buildArray(gameData);
-
-    if (!pcg.create(map, Request)) {
+    if (!pcg.create(&rec, Request)) {
         return false;
     };
 
@@ -226,15 +216,11 @@ bool Client::getItem(int id) {
 
     Package pcg;
 
-    QVariantMap map;
-    if (!FactoryNetObjects::build(NetworkClasses::GetItem, map)) {
-        return false;
-    }
+    GetItem rec;
+    rec.setToken(_token);
+    rec.setId(id);
 
-    map["token"] = _token;
-    map["id"] = id;
-
-    if (!pcg.create(map, Request)) {
+    if (!pcg.create(&rec, Request)) {
         return false;
     };
 

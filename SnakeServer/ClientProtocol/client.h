@@ -24,7 +24,7 @@ private:
     int currentIndex = 0;
     QHash<unsigned char, QVariantMap> _requestsMap;
 
-    bool receiveData(QVariantMap map);
+    bool receiveData(BaseNetworkObject *map);
     void setOnline(bool newStatus);
     bool sendPackage(Package &pkg);
     inline unsigned char nextIndex();

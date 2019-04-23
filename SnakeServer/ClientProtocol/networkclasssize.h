@@ -9,6 +9,8 @@ struct NetworkClassSize {
     bool isStaticType();
 
     NetworkClassSize(unsigned int size);
+    NetworkClassSize(unsigned int min, unsigned int max);
+
     NetworkClassSize& operator = (unsigned int size);
     bool isValid(unsigned int size) const;
 };

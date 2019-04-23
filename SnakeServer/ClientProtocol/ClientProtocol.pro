@@ -45,16 +45,23 @@ SOURCES += \
         basenetworkobject.cpp \
         clientprotocol.cpp \
         client.cpp \
+        gamedata.cpp \
+        getitem.cpp \
+        login.cpp \
         networkclasssize.cpp \
         server.cpp \
         factorynetobjects.cpp \
-        connectioninfo.cpp
+        connectioninfo.cpp \
+        updateplayerdata.cpp
 
 
 HEADERS += \
         basenetworkobject.h \
         clientprotocol.h \
         clientprotocol_global.h \
+        gamedata.h \
+        getitem.h \
+        login.h \
         networkclasssize.h \
         client.h \
         server.h \
@@ -62,5 +69,6 @@ HEADERS += \
         config.h \
         factorynetobjects.h \
         connectioninfo.h \
-        cpserver.h
+        cpserver.h \
+        updateplayerdata.h
 

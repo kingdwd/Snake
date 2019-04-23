@@ -10,6 +10,11 @@ NetworkClassSize::NetworkClassSize(unsigned int size) {
     operator=(size);
 }
 
+NetworkClassSize::NetworkClassSize(unsigned int min, unsigned int maxDif) {
+    operator=(min);
+    max += maxDif;
+}
+
 NetworkClassSize &NetworkClassSize::operator =(unsigned int size) {
     min = max = size;
     return *this;

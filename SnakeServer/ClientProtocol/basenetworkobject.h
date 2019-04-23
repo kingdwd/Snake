@@ -5,9 +5,10 @@
 
 #include <cstdlib>
 #include <QDataStream>
+#include <QVector>
 namespace ClientProtocol {
 
-
+typedef QByteArray SHA256;
 
 class BaseNetworkObject
 {
