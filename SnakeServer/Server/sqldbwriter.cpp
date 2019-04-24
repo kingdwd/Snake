@@ -7,7 +7,6 @@
 #include <QSqlError>
 #include <quasarapp.h>
 #include <clientprotocol.h>
-#include <streamers.h>
 #include <factorynetobjects.h>
 
 bool SqlDBWriter::exec(QSqlQuery *sq,const QString& sqlFile) {

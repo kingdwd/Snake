@@ -13,6 +13,10 @@ enum class SqlDBCasheWriteMode: int {
     Force = 0x2,
 } ;
 
+namespace ClientProtocol {
+    class BaseNetworkObject;
+}
+
 class SqlDBCashe : private SqlDBWriter
 {
 private:
@@ -40,10 +44,10 @@ public:
     bool initDb(const QString &sql = DEFAULT_DB_NAME,
                 const QString &path = DEFAULT_DB_PATH) override;
 
-    bool getItem(int id, QVariantMap &res) override;
-    int saveItem(QVariantMap &item) override;
-    bool getPlayer(int id, QVariantMap &res) override;
-    int savePlayer(QVariantMap &player) override;
+    bool getItem(int id, ClientProtocol::BaseNetworkObject *res) override;
+    int saveItem( ClientProtocol::BaseNetworkObject *res) override;
+    bool getPlayer(int id, ClientProtocol::BaseNetworkObject *res) override;
+    int savePlayer( ClientProtocol::BaseNetworkObject *res) override;
 
     bool giveAwayItem(int player, int item);
     bool getItem(int player, int item, bool check = true);

@@ -168,7 +168,7 @@ bool SqlDBCashe::initDb(const QString &sql, const QString &path) {
     return true;
 }
 
-bool SqlDBCashe::getItem(int id, QVariantMap &res) {
+bool SqlDBCashe::getItem(int id, BaseNetworkObject *res) {
     auto item = items.value(id, QVariantMap{{"id", "-1"}});
     if (item.value("id") != "-1") {
         res = item;
@@ -183,27 +183,27 @@ bool SqlDBCashe::getItem(int id, QVariantMap &res) {
     return false;
 }
 
-int SqlDBCashe::saveItem(QVariantMap &item) {
+int SqlDBCashe::saveItem(ClientProtocol::BaseNetworkObject *res) {
 
-    if (!ClientProtocol::isValidMap(item)) {
+    if (!ClientProtocol::isValidMap(res)) {
         return -1;
     }
 
-    int id = item.value("id", -1).toInt();
+    int id = res.value("id", -1).toInt();
 
     if (id < 0) {
         id = generateIdForItem();
-        item.insert("id", id);
+        res.insert("id", id);
     }
 
-    items.insert(id, item);
+    items.insert(id, res);
 
     globalUpdateDataBase(SqlDBCasheWriteMode::On_New_Thread);
 
     return id;
 }
 
-bool SqlDBCashe::getPlayer(int id, QVariantMap &res) {
+bool SqlDBCashe::getPlayer(int id, ClientProtocol::BaseNetworkObject *res) {
     auto player = players.value(id, QVariantMap{{"id", "-1"}});
     if (player.value("id") != "-1") {
         res = player;
@@ -218,19 +218,19 @@ bool SqlDBCashe::getPlayer(int id, QVariantMap &res) {
     return false;
 }
 
-int SqlDBCashe::savePlayer(QVariantMap &player) {
-    if (!ClientProtocol::isValidMap(player)) {
+int SqlDBCashe::savePlayer(ClientProtocol::BaseNetworkObject *res) {
+    if (!ClientProtocol::isValidMap(res)) {
         return -1;
     }
 
-    int id = player.value("id", -1).toInt();
+    int id = res.value("id", -1).toInt();
 
     if (id < 0) {
         id = generateIdForItem();
-        player.insert("id", id);
+        res.insert("id", id);
     }
 
-    players.insert(id, player);
+    players.insert(id, res);
 
     globalUpdateDataBase(SqlDBCasheWriteMode::On_New_Thread);
 

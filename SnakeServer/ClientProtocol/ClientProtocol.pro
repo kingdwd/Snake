@@ -49,6 +49,7 @@ SOURCES += \
         getitem.cpp \
         login.cpp \
         networkclasssize.cpp \
+        player.cpp \
         server.cpp \
         factorynetobjects.cpp \
         connectioninfo.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
         login.h \
         networkclasssize.h \
         client.h \
+        player.h \
         server.h \
         cp.h \
         config.h \
