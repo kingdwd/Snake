@@ -14,6 +14,7 @@ private:
     QString gmail;
     unsigned int many;
     unsigned int record;
+    unsigned int avgRecord;
     QList<int> items;
     int cureentSnake;
 
@@ -24,6 +25,7 @@ public:
     NetworkClassSize classSize() const override;
     QDataStream &writeToStream(QDataStream &stream) const override;
     QDataStream &readFromStream(QDataStream &stream) override;
+    bool isValid() const override;
     QString getName() const;
     void setName(const QString &value);
     QString getGmail() const;
@@ -36,6 +38,8 @@ public:
     void setItems(const QList<int> &value);
     int getCureentSnake() const;
     void setCureentSnake(int value);
+    unsigned int getAvgRecord() const;
+    void setAvgRecord(unsigned int value);
 };
 
 }

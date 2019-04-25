@@ -18,6 +18,7 @@ public:
     NetworkClassSize classSize() const override;
     QDataStream &writeToStream(QDataStream &stream) const override;
     QDataStream &readFromStream(QDataStream &stream) override;
+    bool isValid() const override;
     QString getGmail() const;
     void setGmail(const QString &value);
     SHA256 getHashPass() const;

@@ -1,3 +1,4 @@
+#include "playerdbdata.h"
 #include "sqldbwriter.h"
 
 #include <QRegularExpression>
@@ -158,51 +159,45 @@ bool SqlDBWriter::checkItem(int idItem, int idOwner) {
     return true;
 }
 
-int SqlDBWriter::savePlayer(const ClientProtocol::Player *player) {
+int SqlDBWriter::savePlayer(const PlayerDBData *player) {
     if (!isValid()) {
         return -1;
     }
 
-    if (!ClientProtocol::FactoryNetObjects::isValid(player,
-            ClientProtocol::NetworkClasses::Player)) {
+    if (!player->isValid()) {
         return -1;
     }
 
     QString request;
-    int id = player.value("id").toInt();
-
-    if (id < 0) {
-        return -1;
-    }
+    int id = player->id();
 
     if (checkPlayer(id)) {
         request = QString("UPDATE players SET name='%0', gmail='%1', money='%2',"
                           " avgrecord='%3', record='%4', lastOnline='%5',"
                           " onlinetime='%6', currentsnake='%7') WHERE id='%8' ").arg(
-                        player.value("name").toString(),
-                        player.value("gmail").toString(),
-                        player.value("money").toString(),
-                        player.value("avgrecord").toString(),
-                        player.value("record").toString(),
-                        player.value("lastOnline").toString(),
-                        player.value("onlinetime").toString(),
-                        player.value("currentsnake").toString(),
+                        player->getName()).arg(
+                        player->getGmail()).arg(
+                        player->getMany()).arg(
+                        player->getAvgRecord()).arg(
+                        player->getRecord()).arg(
+                        player->getLastOnline()).arg(
+                        player->getOnlineTime()).arg(
+                        player->getCureentSnake()).arg(
                         QString::number(id));
 
     } else {
         request = QString("INSERT INTO players(id, name, gmail, money, avgrecord, record,"
                                  " lastOnline, onlinetime, currentsnake) VALUES "
                                  "('%0', '%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8')").arg(
-                       player.value("id").toString(),
-                       player.value("name").toString(),
-                       player.value("gmail").toString(),
-                       player.value("money").toString(),
-                       player.value("avgrecord").toString(),
-                       player.value("record").toString(),
-                       player.value("lastOnline").toString(),
-                       player.value("onlinetime").toString(),
-                       player.value("currentsnake").toString());
-
+                       id).arg(
+                    player->getName()).arg(
+                    player->getGmail()).arg(
+                    player->getMany()).arg(
+                    player->getAvgRecord()).arg(
+                    player->getRecord()).arg(
+                    player->getLastOnline()).arg(
+                    player->getOnlineTime()).arg(
+                    player->getCureentSnake());
 
     }
 
@@ -220,26 +215,18 @@ int SqlDBWriter::saveItem(const ClientProtocol::BaseNetworkObject *item) {
         return -1;
     }
 
-    if (ClientProtocol::FactoryNetObjects::isValid(item,
-            ClientProtocol::NetworkClasses::Player)) {
+    if (item->isValid()) {
         return -1;
     }
 
-    auto type = static_cast<ClientProtocol::NetworkClasses::Type>
-            (item.value("command", ClientProtocol::NetworkClasses::Undefined).toInt());
+    auto type = item->getClass();
 
-    int id = item.value("id", -1).toInt();
-
-    if (id < 0) {
-        return -1;
-    }
+    int id = item->id();
 
     QByteArray bytes;
     QString request;
 
-    if (!ClientProtocol::Streamers::write(bytes, item)) {
-        return -1;
-    }
+    item->toBytes(bytes);
 
     if (checkItem(id)) {
         request = QString("UPDATE items SET type='%1', data = :bytes where id = %0").
@@ -314,7 +301,7 @@ bool SqlDBWriter::saveOvners(int player, const QSet<int> items) {
     return true;
 }
 
-bool SqlDBWriter::getPlayer(int id, ClientProtocol::BaseNetworkObject *player) {
+bool SqlDBWriter::getPlayer(int id, PlayerDBData *player) {
 
     if (!isValid()) {
         return false;
@@ -329,14 +316,14 @@ bool SqlDBWriter::getPlayer(int id, ClientProtocol::BaseNetworkObject *player) {
     if (!query->next()) {
         return false;
     }
-    player["name"] = query->value("name");
-    player["gmail"] = query->value("gmail");
-    player["money"] = query->value("money");
-    player["avgrecord"] = query->value("avgrecord");
-    player["record"] = query->value("record");
-    player["lastOnline"] = query->value("lastOnline");
-    player["onlinetime"] = query->value("onlinetime");
-    player["currentsnake"] = query->value("currentsnake");
+    player->setName(query->value("name").toString());
+    player->setGmail(query->value("gmail").toString());
+    player->setMany(query->value("money").toUInt());
+    player->setAvgRecord(query->value("avgrecord").toUInt());
+    player->setRecord(query->value("record").toUInt());
+    player->setLastOnline(query->value("lastOnline").toInt());
+    player->setOnlineTime(query->value("onlinetime").toInt());
+    player->setCureentSnake(query->value("currentsnake").toInt());
 
     return true;
 }
@@ -358,7 +345,9 @@ bool SqlDBWriter::getItem(int id, ClientProtocol::BaseNetworkObject *item) {
     }
     auto data = query->value(0).toByteArray();
 
-    return ClientProtocol::Streamers::read(data, item);
+    item->fromBytes(data);
+
+    return true;
 }
 
 bool SqlDBWriter::itemIsFreeFrom(int item) const {

@@ -44,4 +44,21 @@ QDataStream &BaseNetworkObject::readFromStream(QDataStream &stream) {
     stream >> _id;
     return stream;
 }
+
+bool BaseNetworkObject::isValid() const {
+    return _id >= 0 && _class > 0;
+}
+
+void BaseNetworkObject::toBytes(QByteArray &array) const {
+    QDataStream stream(&array, QIODevice::WriteOnly);
+
+    writeToStream(stream);
+
+}
+
+void BaseNetworkObject::fromBytes(const QByteArray &array) {
+    QDataStream stream(array);
+
+    readFromStream(stream);
+}
 }

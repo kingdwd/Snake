@@ -19,6 +19,7 @@ public:
     NetworkClassSize classSize() const override;
     QDataStream &writeToStream(QDataStream &stream) const override;
     QDataStream &readFromStream(QDataStream &stream) override;
+    bool isValid() const override;
 };
 
 }

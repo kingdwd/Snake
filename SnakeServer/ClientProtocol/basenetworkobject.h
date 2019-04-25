@@ -55,6 +55,9 @@ public:
     virtual NetworkClassSize classSize() const;
     virtual QDataStream& writeToStream(QDataStream& stream) const;
     virtual QDataStream& readFromStream(QDataStream& stream);
+    virtual bool isValid() const;
+    void toBytes(QByteArray& array) const;
+    void fromBytes(const QByteArray& array);
     int id() const;
     void setId(int id);
     qint8 getClass() const;

@@ -42,4 +42,8 @@ QDataStream &GameData::readFromStream(QDataStream &stream) {
     return stream;
 }
 
+bool GameData::isValid() const {
+    return timeClick.size() > 0 && UpdatePlayerData::isValid();
+}
+
 }

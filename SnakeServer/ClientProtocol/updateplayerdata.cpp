@@ -36,4 +36,8 @@ QDataStream &UpdatePlayerData::readFromStream(QDataStream &stream) {
     return stream;
 }
 
+bool UpdatePlayerData::isValid() const {
+    return token.size() == 32 && BaseNetworkObject::isValid();
+}
+
 }

@@ -30,6 +30,12 @@ QDataStream &Login::readFromStream(QDataStream &stream) {
     return stream;
 }
 
+bool Login::isValid() const {
+    return  gmail.size() > 5 &&
+            hashPass.size() == 32 &&
+            BaseNetworkObject::isValid();
+}
+
 QString Login::getGmail() const {
     return gmail;
 }

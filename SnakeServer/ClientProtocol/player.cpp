@@ -4,23 +4,19 @@
 namespace ClientProtocol {
 
 
-QString Player::getName() const
-{
+QString Player::getName() const {
     return name;
 }
 
-void Player::setName(const QString &value)
-{
+void Player::setName(const QString &value) {
     name = value;
 }
 
-QString Player::getGmail() const
-{
+QString Player::getGmail() const {
     return gmail;
 }
 
-void Player::setGmail(const QString &value)
-{
+void Player::setGmail(const QString &value) {
     gmail = value;
 }
 
@@ -29,41 +25,42 @@ unsigned int Player::getMany() const
     return many;
 }
 
-void Player::setMany(unsigned int value)
-{
+void Player::setMany(unsigned int value) {
     many = value;
 }
 
-unsigned int Player::getRecord() const
-{
+unsigned int Player::getRecord() const {
     return record;
 }
 
-void Player::setRecord(unsigned int value)
-{
+void Player::setRecord(unsigned int value) {
     record = value;
 }
 
-QList<int> Player::getItems() const
-{
+QList<int> Player::getItems() const {
     return items;
 }
 
-void Player::setItems(const QList<int> &value)
-{
+void Player::setItems(const QList<int> &value) {
     items = value;
 }
 
-int Player::getCureentSnake() const
-{
+int Player::getCureentSnake() const {
     return cureentSnake;
 }
 
-void Player::setCureentSnake(int value)
-{
+void Player::setCureentSnake(int value) {
     cureentSnake = value;
 }
 
+
+unsigned int Player::getAvgRecord() const {
+    return avgRecord;
+}
+
+void Player::setAvgRecord(unsigned int value) {
+    avgRecord = value;
+}
 
 Player::Player()
 {
@@ -81,6 +78,7 @@ NetworkClassSize Player::classSize() const {
             + getTypeSize(gmail)
             + getTypeSize(many)
             + getTypeSize(record)
+            + getTypeSize(avgRecord)
             + getTypeSize(items)
             + getTypeSize(cureentSnake);
 }
@@ -91,6 +89,7 @@ QDataStream &Player::writeToStream(QDataStream &stream) const {
     stream << gmail;
     stream << many;
     stream << record;
+    stream << avgRecord;
     stream << items;
     stream << cureentSnake;
 
@@ -103,8 +102,14 @@ QDataStream &Player::readFromStream(QDataStream &stream) {
     stream >> gmail;
     stream >> many;
     stream >> record;
+    stream >> avgRecord;
     stream >> items;
     stream >> cureentSnake;
     return stream;
+}
+
+bool Player::isValid() const {
+    return !name.isNull() && gmail.size() > 5 &&
+            UpdatePlayerData::isValid();
 }
 }
