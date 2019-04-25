@@ -26,9 +26,8 @@ BaseNetworkObject *GameData::create() const {
 }
 
 NetworkClassSize GameData::classSize() const {
-    auto size = UpdatePlayerData::classSize();
-
-    return NetworkClassSize(size.min + 4, size.max + 4 + 2 * MAX_SIZE);
+    return UpdatePlayerData::classSize() +
+            getTypeSize(timeClick);
 }
 
 QDataStream &GameData::writeToStream(QDataStream &stream) const {

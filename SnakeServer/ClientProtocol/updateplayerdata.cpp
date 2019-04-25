@@ -21,9 +21,7 @@ BaseNetworkObject *UpdatePlayerData::create() const {
 }
 
 NetworkClassSize UpdatePlayerData::classSize() const {
-    auto size = BaseNetworkObject::classSize();
-
-    return NetworkClassSize(size.max + 32 + 4);
+    return BaseNetworkObject::classSize() + getTypeSize(token);
 }
 
 QDataStream &UpdatePlayerData::writeToStream(QDataStream &stream) const {

@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QSet>
 #include <QVariantMap>
+#include <player.h>
 
 enum class SqlDBCasheWriteMode: int {
     Default = 0x0,
@@ -46,8 +47,8 @@ public:
 
     bool getItem(int id, ClientProtocol::BaseNetworkObject *res) override;
     int saveItem( ClientProtocol::BaseNetworkObject *res) override;
-    bool getPlayer(int id, ClientProtocol::BaseNetworkObject *res) override;
-    int savePlayer( ClientProtocol::BaseNetworkObject *res) override;
+    bool getPlayer(int id, ClientProtocol::Player *res) override;
+    int savePlayer( ClientProtocol::Player *res) override;
 
     bool giveAwayItem(int player, int item);
     bool getItem(int player, int item, bool check = true);

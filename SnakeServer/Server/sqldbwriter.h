@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QDir>
+#include <player.h>
 
 #define DEFAULT_DB_NAME "SnakeDatabase.db"
 #define DEFAULT_DB_PATH QDir::homePath() + "/SnakeServer"
@@ -31,14 +32,14 @@ protected:
     virtual bool checkPlayer(int id);
     virtual bool checkItem(int idItem, int idOwner = -1);
 
-    virtual int savePlayer(QVariantMap &player);
-    virtual int saveItem(QVariantMap &item);
+    virtual int savePlayer(const ClientProtocol::Player *player);
+    virtual int saveItem(const ClientProtocol::BaseNetworkObject *item);
     virtual bool saveOvners(int player, const QSet<int>);
 
     virtual bool getAllItemsOfPalyer(int player, QSet<int>& items);
 
-    virtual bool getPlayer(int id, QVariantMap &res);
-    virtual bool getItem(int id, QVariantMap &res);
+    virtual bool getPlayer(int id, ClientProtocol::Player *player);
+    virtual bool getItem(int id, ClientProtocol::BaseNetworkObject *item);
 
     virtual bool itemIsFreeFrom(int item) const;
 

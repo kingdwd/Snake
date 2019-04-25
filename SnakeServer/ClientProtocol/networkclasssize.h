@@ -12,6 +12,8 @@ struct NetworkClassSize {
     NetworkClassSize(unsigned int min, unsigned int max);
 
     NetworkClassSize& operator = (unsigned int size);
+    NetworkClassSize& operator + (const NetworkClassSize& );
+
     bool isValid(unsigned int size) const;
 };
 }

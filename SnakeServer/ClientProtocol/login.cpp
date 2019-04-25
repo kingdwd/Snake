@@ -13,8 +13,7 @@ BaseNetworkObject *Login::create() const {
 
 NetworkClassSize Login::classSize() const {
     auto size = BaseNetworkObject::classSize();
-
-    return NetworkClassSize(size.min + 40, size.max + 40 + 2 * MAX_SIZE);
+    return size + getTypeSize(hashPass) + getTypeSize(gmail);
 }
 
 QDataStream &Login::writeToStream(QDataStream &stream) const {

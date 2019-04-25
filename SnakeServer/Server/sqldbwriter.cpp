@@ -158,7 +158,7 @@ bool SqlDBWriter::checkItem(int idItem, int idOwner) {
     return true;
 }
 
-int SqlDBWriter::savePlayer(QVariantMap &player) {
+int SqlDBWriter::savePlayer(const ClientProtocol::Player *player) {
     if (!isValid()) {
         return -1;
     }
@@ -215,7 +215,7 @@ int SqlDBWriter::savePlayer(QVariantMap &player) {
     return id;
 }
 
-int SqlDBWriter::saveItem(QVariantMap &item) {
+int SqlDBWriter::saveItem(const ClientProtocol::BaseNetworkObject *item) {
     if (!isValid()) {
         return -1;
     }
@@ -314,7 +314,7 @@ bool SqlDBWriter::saveOvners(int player, const QSet<int> items) {
     return true;
 }
 
-bool SqlDBWriter::getPlayer(int id, QVariantMap &res) {
+bool SqlDBWriter::getPlayer(int id, ClientProtocol::BaseNetworkObject *player) {
 
     if (!isValid()) {
         return false;
@@ -329,19 +329,19 @@ bool SqlDBWriter::getPlayer(int id, QVariantMap &res) {
     if (!query->next()) {
         return false;
     }
-    res["name"] = query->value("name");
-    res["gmail"] = query->value("gmail");
-    res["money"] = query->value("money");
-    res["avgrecord"] = query->value("avgrecord");
-    res["record"] = query->value("record");
-    res["lastOnline"] = query->value("lastOnline");
-    res["onlinetime"] = query->value("onlinetime");
-    res["currentsnake"] = query->value("currentsnake");
+    player["name"] = query->value("name");
+    player["gmail"] = query->value("gmail");
+    player["money"] = query->value("money");
+    player["avgrecord"] = query->value("avgrecord");
+    player["record"] = query->value("record");
+    player["lastOnline"] = query->value("lastOnline");
+    player["onlinetime"] = query->value("onlinetime");
+    player["currentsnake"] = query->value("currentsnake");
 
     return true;
 }
 
-bool SqlDBWriter::getItem(int id, QVariantMap &res) {
+bool SqlDBWriter::getItem(int id, ClientProtocol::BaseNetworkObject *item) {
 
     if (!isValid()) {
         return false;
@@ -358,7 +358,7 @@ bool SqlDBWriter::getItem(int id, QVariantMap &res) {
     }
     auto data = query->value(0).toByteArray();
 
-    return ClientProtocol::Streamers::read(data, res);
+    return ClientProtocol::Streamers::read(data, item);
 }
 
 bool SqlDBWriter::itemIsFreeFrom(int item) const {

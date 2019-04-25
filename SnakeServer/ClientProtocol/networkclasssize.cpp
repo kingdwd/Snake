@@ -20,6 +20,12 @@ NetworkClassSize &NetworkClassSize::operator =(unsigned int size) {
     return *this;
 }
 
+NetworkClassSize &NetworkClassSize::operator +(const NetworkClassSize & other) {
+    min += other.min;
+    max += other.max;
+    return *this;
+}
+
 bool NetworkClassSize::isValid(unsigned int size) const {
     return size <= max && size >= min;
 }

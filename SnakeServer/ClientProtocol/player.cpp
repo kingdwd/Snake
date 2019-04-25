@@ -75,20 +75,36 @@ BaseNetworkObject *Player::create() const {
 }
 
 NetworkClassSize Player::classSize() const {
-    auto size = UpdatePlayerData::classSize();
 
-    return NetworkClassSize(size.min + 4, size.max + 4 + 2 * MAX_SIZE);
+    return UpdatePlayerData::classSize()
+            + getTypeSize(name)
+            + getTypeSize(gmail)
+            + getTypeSize(many)
+            + getTypeSize(record)
+            + getTypeSize(items)
+            + getTypeSize(cureentSnake);
 }
 
 QDataStream &Player::writeToStream(QDataStream &stream) const {
     UpdatePlayerData::writeToStream(stream);
-    stream << timeClick;
+    stream << name;
+    stream << gmail;
+    stream << many;
+    stream << record;
+    stream << items;
+    stream << cureentSnake;
+
     return stream;
 }
 
 QDataStream &Player::readFromStream(QDataStream &stream) {
     UpdatePlayerData::readFromStream(stream);
-    stream >> timeClick;
+    stream >> name;
+    stream >> gmail;
+    stream >> many;
+    stream >> record;
+    stream >> items;
+    stream >> cureentSnake;
     return stream;
 }
 }

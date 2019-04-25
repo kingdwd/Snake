@@ -30,7 +30,7 @@ BaseNetworkObject::~BaseNetworkObject() {
 }
 
 NetworkClassSize BaseNetworkObject::classSize() const {
-    return sizeof(_id) + sizeof (_class);
+    return getTypeSize(_id) + getTypeSize(_class);
 }
 
 QDataStream &BaseNetworkObject::writeToStream(QDataStream &stream) const {
