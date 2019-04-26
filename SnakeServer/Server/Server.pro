@@ -43,7 +43,7 @@ HEADERS += \
         playerdbdata.h \
         server_global.h \ 
         sqldbcashe.h \
-        sqldbwriter.h.h
+        sqldbwriter.h
 
 include($$PWD/../../QuasarAppLib/QuasarLib.pri)
 include($$PWD/../ServerProtocol/ServerProtocol.pri)

@@ -301,21 +301,25 @@ bool SqlDBWriter::saveOvners(int player, const QSet<int> items) {
     return true;
 }
 
-bool SqlDBWriter::getPlayer(int id, PlayerDBData *player) {
+PlayerDBData * SqlDBWriter::getPlayer(int id) {
 
     if (!isValid()) {
-        return false;
+        return nullptr;
     }
 
     QString request = QString("SELECT * FROM players WHERE id=%0").arg(id);
     if (!query->exec(request)) {
         QuasarAppUtils::Params::verboseLog("request error : " + query->lastError().text());
-        return false;
+        return nullptr;
     }
 
     if (!query->next()) {
-        return false;
+        return nullptr;
     }
+
+    auto player = new PlayerDBData();
+
+
     player->setName(query->value("name").toString());
     player->setGmail(query->value("gmail").toString());
     player->setMany(query->value("money").toUInt());
@@ -325,29 +329,36 @@ bool SqlDBWriter::getPlayer(int id, PlayerDBData *player) {
     player->setOnlineTime(query->value("onlinetime").toInt());
     player->setCureentSnake(query->value("currentsnake").toInt());
 
-    return true;
+    return player;
 }
 
-bool SqlDBWriter::getItem(int id, ClientProtocol::BaseNetworkObject *item) {
+ClientProtocol::BaseNetworkObject *SqlDBWriter::getItem(int id) {
 
     if (!isValid()) {
-        return false;
+        return nullptr;
     }
 
-    QString request = QString("SELECT data FROM items WHERE id=%0").arg(id);
+    QString request = QString("SELECT type, data FROM items WHERE id=%0").arg(id);
     if (!query->exec(request)) {
         QuasarAppUtils::Params::verboseLog("request error : " + query->lastError().text());
-        return false;
+        return nullptr;
     }
 
     if (!query->next()) {
-        return false;
+        return nullptr;
     }
-    auto data = query->value(0).toByteArray();
 
-    item->fromBytes(data);
+    auto type = static_cast<quint8>(query->value(1).toUInt());
+    auto data = query->value(1).toByteArray();
 
-    return true;
+    auto obj = ClientProtocol::FactoryNetObjects::build(type);
+
+    if (!obj)
+        return nullptr;
+
+    obj->fromBytes(data);
+
+    return obj;
 }
 
 bool SqlDBWriter::itemIsFreeFrom(int item) const {

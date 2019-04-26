@@ -38,8 +38,8 @@ protected:
 
     virtual bool getAllItemsOfPalyer(int player, QSet<int>& items);
 
-    virtual bool getPlayer(int id, PlayerDBData *player);
-    virtual bool getItem(int id, ClientProtocol::BaseNetworkObject *item);
+    virtual PlayerDBData *getPlayer(int id);
+    virtual ClientProtocol::BaseNetworkObject * getItem(int id);
 
     virtual bool itemIsFreeFrom(int item) const;
 

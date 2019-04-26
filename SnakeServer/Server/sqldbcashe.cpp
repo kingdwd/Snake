@@ -4,6 +4,7 @@
 #include <clientprotocol.h>
 
 #include <QDateTime>
+#include <basenetworkobject.h>
 
 int SqlDBCashe::generateIdForItem() const {
     if (items.isEmpty()) {
@@ -168,9 +169,10 @@ bool SqlDBCashe::initDb(const QString &sql, const QString &path) {
     return true;
 }
 
-bool SqlDBCashe::getItem(int id, BaseNetworkObject *res) {
-    auto item = items.value(id, QVariantMap{{"id", "-1"}});
-    if (item.value("id") != "-1") {
+bool SqlDBCashe::getItem(int id, ClientProtocol::BaseNetworkObject *res) {
+    auto item = items.value(id, nullptr);
+
+    if (item && item->isValid()) {
         res = item;
         return true;
     }
@@ -185,17 +187,16 @@ bool SqlDBCashe::getItem(int id, BaseNetworkObject *res) {
 
 int SqlDBCashe::saveItem(ClientProtocol::BaseNetworkObject *res) {
 
-    if (!ClientProtocol::isValidMap(res)) {
-        return -1;
-    }
-
-    int id = res.value("id", -1).toInt();
+    int id = res->id();
 
     if (id < 0) {
         id = generateIdForItem();
-        res.insert("id", id);
+        res->setId(id);
     }
 
+    if (!res->isValid()) {
+        return -1;
+    }
     items.insert(id, res);
 
     globalUpdateDataBase(SqlDBCasheWriteMode::On_New_Thread);
