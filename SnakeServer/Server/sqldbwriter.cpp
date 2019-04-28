@@ -159,7 +159,7 @@ bool SqlDBWriter::checkItem(int idItem, int idOwner) {
     return true;
 }
 
-int SqlDBWriter::savePlayer(const PlayerDBData *player) {
+int SqlDBWriter::savePlayer(PlayerDBData *player) {
     if (!isValid()) {
         return -1;
     }
@@ -210,7 +210,7 @@ int SqlDBWriter::savePlayer(const PlayerDBData *player) {
     return id;
 }
 
-int SqlDBWriter::saveItem(const ClientProtocol::BaseNetworkObject *item) {
+int SqlDBWriter::saveItem(ClientProtocol::BaseNetworkObject *item) {
     if (!isValid()) {
         return -1;
     }

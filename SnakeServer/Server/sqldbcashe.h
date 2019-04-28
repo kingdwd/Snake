@@ -48,7 +48,7 @@ public:
     ClientProtocol::BaseNetworkObject * getItem(int id) override;
     int saveItem(ClientProtocol::BaseNetworkObject *res) override;
     PlayerDBData* getPlayer(int id) override;
-    int savePlayer(const PlayerDBData *res) override;
+    int savePlayer(PlayerDBData *res) override;
 
     bool giveAwayItem(int player, int item);
     bool getItem(int player, int item, bool check = true);

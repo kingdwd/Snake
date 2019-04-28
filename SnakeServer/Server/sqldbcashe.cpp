@@ -219,16 +219,16 @@ PlayerDBData* SqlDBCashe::getPlayer(int id) {
     return nullptr;
 }
 
-int SqlDBCashe::savePlayer(ClientProtocol::BaseNetworkObject *res) {
-    if (!ClientProtocol::isValidMap(res)) {
+int SqlDBCashe::savePlayer(PlayerDBData *res) {
+    if (!res->isValid()) {
         return -1;
     }
 
-    int id = res.value("id", -1).toInt();
+    int id = res->id();
 
     if (id < 0) {
         id = generateIdForItem();
-        res.insert("id", id);
+        res->setId(id);
     }
 
     players.insert(id, res);
