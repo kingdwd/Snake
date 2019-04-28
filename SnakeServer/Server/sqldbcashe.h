@@ -46,7 +46,7 @@ public:
                 const QString &path = DEFAULT_DB_PATH) override;
 
     ClientProtocol::BaseNetworkObject * getItem(int id) override;
-    int saveItem(const ClientProtocol::BaseNetworkObject *res) override;
+    int saveItem(ClientProtocol::BaseNetworkObject *res) override;
     PlayerDBData* getPlayer(int id) override;
     int savePlayer(const PlayerDBData *res) override;
 
